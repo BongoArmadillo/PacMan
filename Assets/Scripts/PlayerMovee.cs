@@ -12,37 +12,19 @@ public class PlayerMovee : MonoBehaviour
     public CharacterController controller;
     public Transform cam;
 
+    [Header("Controlls")]
+    public KeyCode Sprint = KeyCode.LeftShift;
+
     public float speed = 6;
-    public float gravity = -9.81f;
-    public float jumpHeight = 3;
-    Vector3 velocity;
-    bool isGrounded;
-
-    public Transform groundCheck;
-    public float groundDistance = 0.4f;
-    public LayerMask groundMask;
-
+    
+    private int count = 0;
     float turnSmoothVelocity;
     public float turnSmoothTime = 0.1f;
 
     // Update is called once per frame
     void Update()
-    {
-        //jump
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-
-        if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f;
-        }
-
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
-        }
-        //gravity
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+    {   
+        //Sprinting();
         //walk
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
@@ -58,4 +40,36 @@ public class PlayerMovee : MonoBehaviour
             controller.Move(moveDir.normalized * speed * Time.deltaTime);
         }
     }
+
+    private void Sprinting()
+    {
+        if(Input.GetKey(Sprint))
+        speed = 10;
+        else
+        speed = 6;
+    }   
+
+    private void OnTriggerEnter(Collider other) {
+        if(other.gameObject.CompareTag("Coins"))
+        {
+            other.gameObject.SetActive(false);
+            count = count + 1;
+            Debug.LogError(count);
+        }
+
+        if(other.gameObject.CompareTag("SpeedBoost"))
+        {
+            other.gameObject.SetActive(false);
+            speed = 10;
+            Invoke("speedboostend", 5f);
+            
+        }
+
+    }
+
+    void speedboostend()
+    {
+        speed = 6;
+    }
+
 }

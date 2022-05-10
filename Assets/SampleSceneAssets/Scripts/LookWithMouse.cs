@@ -18,6 +18,7 @@ public class LookWithMouse : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     // Update is called once per frame
@@ -31,6 +32,7 @@ public class LookWithMouse : MonoBehaviour
             var delta = Mouse.current.delta.ReadValue() / 15.0f;
             mouseX += delta.x;
             mouseY += delta.y;
+            mouseX 
         }
         if (Gamepad.current != null)
         {
