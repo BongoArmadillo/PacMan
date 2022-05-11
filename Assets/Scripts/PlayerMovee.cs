@@ -6,26 +6,35 @@ using System.Collections.Specialized;
 using System.Security.Cryptography;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovee : MonoBehaviour
 {
     public CharacterController controller;
     public Transform cam;
+    public GameObject pauseGameMenu;
+    public GameObject Level_completed;
 
     [Header("Controlls")]
-    public KeyCode Sprint = KeyCode.LeftShift;
+    public KeyCode pause = KeyCode.Escape;
 
+
+    
     public float speed = 6;
     
-    private int count = 0;
-    float turnSmoothVelocity;
-    public float turnSmoothTime = 0.1f;
+    public static int count = 0;
+    private float turnSmoothVelocity;
+    private float turnSmoothTime = 0.1f;
 
-    // Update is called once per frame
+
+
+    
     void Update()
     {   
-        //Sprinting();
-        //walk
+        
+        menuPause();
+       
+       //walk
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
@@ -41,13 +50,6 @@ public class PlayerMovee : MonoBehaviour
         }
     }
 
-    private void Sprinting()
-    {
-        if(Input.GetKey(Sprint))
-        speed = 10;
-        else
-        speed = 6;
-    }   
 
     private void OnTriggerEnter(Collider other) {
         if(other.gameObject.CompareTag("Coins"))
@@ -72,4 +74,19 @@ public class PlayerMovee : MonoBehaviour
         speed = 6;
     }
 
+   
+
+    void menuPause()
+    {
+        if(Input.GetKeyDown(pause) && pauseGameMenu.activeSelf == false && Level_completed.activeSelf == false)
+        {
+            pauseGameMenu.SetActive(true);
+            Time.timeScale = 0f;
+        }
+        else if(Input.GetKeyDown(pause) && pauseGameMenu.activeSelf == true && Level_completed.activeSelf == false)
+        {           
+            pauseGameMenu.SetActive(false);
+            Time.timeScale = 1f;
+        }
+    }
 }
