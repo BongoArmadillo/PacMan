@@ -5,16 +5,22 @@ using UnityEngine.AI;
 
 public class PatrolAgent : MonoBehaviour
 {
+    //Waypoints
    public Transform[] points;
 
    private int destinationPoints = 0;
 
+    //Agent
    private NavMeshAgent agent;
 
+    //Player
     public Transform player;
+    Vector3 origialPosition;
 
     public LayerMask whatIsPlayer;
+    public LayerMask whatIsWall;
 
+    public float angle;
     public float sightRange;
     public bool playerInSightRange;
 
@@ -26,6 +32,7 @@ public class PatrolAgent : MonoBehaviour
    private void Start() {
        agent = GetComponent<NavMeshAgent>();
        agent.autoBraking = false;
+       origialPosition = player.transform.position;
        GoToNextPoit();
    }
 
@@ -37,13 +44,19 @@ public class PatrolAgent : MonoBehaviour
     }
 
     private void Update() {
-
-        playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
+    playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
 
         if(!agent.pathPending && agent.remainingDistance < 0.5f && !playerInSightRange)
         GoToNextPoit();
-        if(playerInSightRange)
+        if(FOV())
         ChasePlayer();
+        
+        if(origialPosition == player.transform.position)
+        {
+            destinationPoints = 0;
+            agent.destination = points[destinationPoints].position;
+        }
+
     }
  private void ChasePlayer()
     {
@@ -54,6 +67,21 @@ private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, sightRange);
+    }
+
+   public bool FOV()
+    {
+        Vector3 directToTarget = (player.position  - transform.position);
+           
+            if(Vector3.Angle(transform.forward, directToTarget) < angle / 2)
+            {
+                float distanceToTarget = Vector3.Distance(transform.position, player.position);
+                
+                if(!Physics.Raycast(transform.position, directToTarget, distanceToTarget, whatIsWall))
+                return true;
+            }
+    
+        return false;
     }
 
 }
