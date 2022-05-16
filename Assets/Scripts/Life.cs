@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 public class Life : MonoBehaviour
 {
@@ -42,6 +43,7 @@ public class Life : MonoBehaviour
     void Update()
     {
        cc.enabled = true;
+       
     }
 
  public void OnTriggerEnter(Collider other) {
@@ -53,11 +55,10 @@ public class Life : MonoBehaviour
             ghost1.transform.position = originalPositionGhost1;
             ghost2.transform.position = originalPositionGhost2;
             ghost3.transform.position = originalPositionGhost3;
-            GameObject.FindGameObjectWithTag("Coins").SetActive(true);
             GameObject.FindGameObjectWithTag("SpeedBoost").SetActive(true);
-            cc.enabled = false;
-            
+            cc.enabled = false;           
      }
+
  }
 
 

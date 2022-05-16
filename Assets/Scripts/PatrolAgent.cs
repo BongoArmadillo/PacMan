@@ -39,14 +39,13 @@ public class PatrolAgent : MonoBehaviour
     void GoToNextPoit()
     {
         agent.destination = points[destinationPoints].position;
-        //destinationPoints = (destinationPoints + 1) % points.Length;
+        
         destinationPoints = Random.Range(0,26);
     }
 
     private void Update() {
-    playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
 
-        if(!agent.pathPending && agent.remainingDistance < 0.5f && !playerInSightRange)
+        if(!agent.pathPending && agent.remainingDistance < 0.5f)
         GoToNextPoit();
         if(FOV())
         ChasePlayer();

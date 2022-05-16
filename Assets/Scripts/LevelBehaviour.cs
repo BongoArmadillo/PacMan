@@ -19,7 +19,7 @@ public class LevelBehaviour : MonoBehaviour
 
      void Winning()
     {
-        if(PlayerMovee.count == 5)
+        if(PlayerMovee.count >= 5)
         {
         Level_complete.SetActive(true);
         Invoke("stopGame", 1.1f);
